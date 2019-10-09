@@ -1,5 +1,7 @@
 package com.mrliuli.base;
 
+import java.util.HashMap;
+
 /**
  * Created by liuli on 2019/09/16.
  */
@@ -36,8 +38,17 @@ public class Operator {
         System.out.println("最后：" + aim);
     }
 
+    public static void hash() {
+        String key = "abcdedf";
+        int h;
+        h = key.hashCode();
+        h = h ^ (h >>> 16);
+        System.out.println("h = " + h);
+    }
+
     public static void main(String[] args) {
         Operator.run();
+        Operator.hash();
     }
 
 

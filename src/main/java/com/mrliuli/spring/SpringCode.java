@@ -30,4 +30,12 @@ public class SpringCode {
 
     //@Resource
 
+    /**
+     * Filter 与 Interceptor 区别
+     *
+     *
+     * Filter vs Interceptor
+     * https://stackoverflow.com/questions/8000844/spring-handlerinterceptor-vs-servlet-filters
+     */
+
 }
