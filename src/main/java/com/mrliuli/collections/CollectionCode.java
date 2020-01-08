@@ -1,7 +1,11 @@
 package com.mrliuli.collections;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * Created by liuli on 2019/09/19.
@@ -32,6 +36,17 @@ public class CollectionCode {
      * 3.1 put操作时，如哈希碰撞，元素插入链表是从尾部插入（jdk7是从头部插入）
      * 3.2 put操作时，如第一次put，即table为空时，则先调用resize，然后put，非第一次，即table.length > 0时，则先put，再resize。
      * 3.3 resize重新分配元素时，链表上的元素，最多会分为两部分，一部分分配在原来的低位位置，另一部分分配到新扩容的高位位置。
+     */
+
+
+    /**
+     * 4 ConcurrentHashMap源码（jdk1.7）
+     * 4.1 ConcurrentHashMap类主要由一个Segment数组（Segment<K,V>[] segments）构成，每个Segment是一个HashMap；
+     * 4.2 Segment的数量size为并发级别concurrencyLevel的大小，默认为 DEFAULT_CONCURRENCY_LEVEL = 16；
+     * 4.3 每个Segment表的容量为ConcurrentHashMap初始容量initialCapacity（默认为DEFAULT_INITIAL_CAPACITY = 16）
+     *      除以Segment的数量ssize，最小容量为2（MIN_SEGMENT_TABLE_CAPACITY = 2）；
+     * 4.4 Segment是一个ReentrantLock类，含有一个HashEntry<K,V>[]数组（HashEntry<K,V>[] table）;
+     *
      */
 
 
