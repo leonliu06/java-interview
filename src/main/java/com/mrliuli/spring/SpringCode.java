@@ -38,4 +38,18 @@ public class SpringCode {
      * https://stackoverflow.com/questions/8000844/spring-handlerinterceptor-vs-servlet-filters
      */
 
+    /**
+     * Spring IOC是如何解决循环依赖的？
+     * 1. 什么是循环依赖？
+     *  1.1 属性循环依赖，如：public class A { private B b; } public class B { private A a; }
+     *  1.2 构造器循环依赖
+     * 2. 解决原理：
+     *  IOC只能够解决属性之间的循环依赖，不能解决构造器之间的循环依赖，如有Bean构造器之间互相依赖，则报错。
+     *  SpringIOC解决属性循环依赖：
+     *  IOC容器里bean的初始化的过程分为三个步骤：创建实例、属性注入实例、回调实例实现的接口方法。
+     *  IOC解决循环依赖就是在创建实例和属性注入这两个步骤之间，IOC在创建实例尚未完成属性注入时，
+     *  会在早期将A的引用缓存到earlySingletonObjects里，即早期暴露引用，当IOC发现A依赖B，B又依赖A时，
+     *  B对象创建时会直接从缓存里引用A对象，以完成B对象的创建。
+     */
+
 }
