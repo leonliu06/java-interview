@@ -57,12 +57,18 @@ public class UnsafeDemo {
      *
      */
 
+    public static String NAME = "me";
+    public Integer age;
+
     public static void main(String[] args){
+
+        Unsafe unsafe = null;
+
         try {
             System.out.println("利用单例方法getUnsafe直接获取Unsafe =====================");
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
             System.out.println(String.format("当前类加载器：【%s】", classLoader.getClass().getName()));
-            Unsafe unsafe = sun.misc.Unsafe.getUnsafe();
+            unsafe = sun.misc.Unsafe.getUnsafe();
             System.out.println(String.format("unsafe.addressSize()：【%s】", unsafe.addressSize()));
         } catch (SecurityException e){
             System.out.println(e.getMessage());
@@ -72,9 +78,43 @@ public class UnsafeDemo {
             System.out.println("利用反射获取Unsafe =====================");
             Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
             theUnsafe.setAccessible(true);
-            Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+            unsafe = (Unsafe) theUnsafe.get(null);
             System.out.println(String.format("unsafe.addressSize()：【%s】", unsafe.addressSize()));
         } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        Class unsafeDemoClass = UnsafeDemo.class;
+        Field NAME = null;
+        Field age = null;
+        try {
+            NAME = unsafeDemoClass.getField("NAME");
+            age = unsafeDemoClass.getField("age");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            System.out.println(String.format("unsafe.objectFieldOffset(NAME)：【%s】", unsafe.objectFieldOffset(NAME)));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            System.out.println(String.format("unsafe.objectFieldOffset(age)：【%s】", unsafe.objectFieldOffset(age)));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            System.out.println(String.format("unsafe.staticFieldOffset(NAME)：【%s】", unsafe.staticFieldOffset(NAME)));
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+
+        try {
+            System.out.println(String.format("unsafe.staticFieldOffset(age)：【%s】", unsafe.staticFieldOffset(age)));
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
 
