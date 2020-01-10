@@ -2,6 +2,8 @@ package com.mrliuli.base;
 
 import sun.misc.Unsafe;
 
+import java.lang.reflect.Field;
+
 /**
  * Created by liuli on 2020/01/09.
  */
@@ -57,11 +59,25 @@ public class UnsafeDemo {
 
     public static void main(String[] args){
         try {
+            System.out.println("利用单例方法getUnsafe直接获取Unsafe =====================");
+            ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+            System.out.println(String.format("当前类加载器：【%s】", classLoader.getClass().getName()));
             Unsafe unsafe = sun.misc.Unsafe.getUnsafe();
-            System.out.println(unsafe.addressSize());
+            System.out.println(String.format("unsafe.addressSize()：【%s】", unsafe.addressSize()));
         } catch (SecurityException e){
             System.out.println(e.getMessage());
         }
+
+        try {
+            System.out.println("利用反射获取Unsafe =====================");
+            Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+            theUnsafe.setAccessible(true);
+            Unsafe unsafe = (Unsafe) theUnsafe.get(null);
+            System.out.println(String.format("unsafe.addressSize()：【%s】", unsafe.addressSize()));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+
     }
 
 }
