@@ -94,6 +94,7 @@ public class UnsafeDemo {
             e.printStackTrace();
         }
 
+        // staticFieldOffset只能使用在静态属性，objectFieldOffset只能使用在非静态属性。
         try {
             System.out.println(String.format("unsafe.objectFieldOffset(NAME)：【%s】", unsafe.objectFieldOffset(NAME)));
         } catch (Exception e) {
