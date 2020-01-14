@@ -1,5 +1,9 @@
 package com.mrliuli.spring;
 
+import com.mrliuli.bean.Animal;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import javax.annotation.Resource;
 
 /**
@@ -51,5 +55,18 @@ public class SpringCode {
      *  会在早期将A的引用缓存到earlySingletonObjects里，即早期暴露引用，当IOC发现A依赖B，B又依赖A时，
      *  B对象创建时会直接从缓存里引用A对象，以完成B对象的创建。
      */
+
+    /**
+     *
+     * @param args
+     */
+    public static void main(String[] args) {
+
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("applicationContext.xml");
+
+        Animal animal = (Animal) applicationContext.getBean("animal");
+        animal.say();
+
+    }
 
 }
