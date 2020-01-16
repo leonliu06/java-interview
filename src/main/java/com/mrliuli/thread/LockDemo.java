@@ -14,9 +14,9 @@ public class LockDemo {
      *  可重入指：当一个线程请求得到一个对象锁后再次请求此对象锁，可以再次得到该对象锁。
      */
 
-    public static void main(String[] args){
+    private static final ReentrantLock reentrantLock = new ReentrantLock(true);
 
-        ReentrantLock reentrantLock = new ReentrantLock();
+    public static void main(String[] args) {
 
         reentrantLock.lock();
         System.out.println("reentrantLock.isLocked() = " + reentrantLock.isLocked());
