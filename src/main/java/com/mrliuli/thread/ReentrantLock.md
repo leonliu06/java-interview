@@ -1,4 +1,4 @@
-## ReentrantLock(jdk1.8)源码阅读
+## ReentrantLock（jdk1.8）源码阅读
 &emsp;&emsp;`ReentrantLock`，即可重入锁（Java环境下，synchronized也是可重入锁），是唯一实现了`Lock`接口的类。`ReentrantLock`主要构成为：含有一个抽象内部类`Sync`，它继承自`AbstractQueuedSynchronizer,即AQS`，
 `Sync`有两个子类，分别是`FairSync`和`NonfairSync`。主要方法有：`ReentrantLock`类的`lock()`，`unlock()`,`tryLock()`
 和`AQS`类的`acquire(int arg)`,`tryAcquire(int arg)`,`addWaiter(Node mode)`和`acquireQueued(final Node node, int arg)`等。
