@@ -18,6 +18,7 @@ public class SpringCode {
      * 1.1 按类型 byType 注入bean，属于 Spring 的注解，当IOC容器没有这个类型的bean或存在这个类型的多个bean（多例）时，都会抛出 BeanCreationException 异常。
      * 1.2 如要允许注解的字段为 null，可以设置它的属性 required = false
      * 1.3 如果存在多例的bean, 可以配合 @Qualifier 注解来设置具体 bean 的名称，以确定单例的 bean
+     * 1.4 默认别名就是当前类名，但是首字母小写
      *
      * 2 @Resource
      * 2.1 按名称 byName （变量名） 注入bean，属于 J2EE 的注解
