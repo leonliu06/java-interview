@@ -28,7 +28,7 @@ public class CollectionCode {
      * 2.3 HashSet 底层 使用 HashMap 实现，.add() 添加一个值时，会作为 HashMap 的 key 来计算 添加
      *
      * 所以，HashSet 存储的值是不重复的，HashMap 存储的 key 是不重复的，但 key 对应的 值可以重复，
-     * HashSet 和 HashMap 都可用存储 null
+     * HashSet 和 HashMap 中的key都可以存储 null，ConcurrentHashMap 中的 key 不可以为 null，会报空指针异常
      */
 
     /**
