@@ -264,7 +264,7 @@
                 HashEntry<K,V> next = e.next;
                 int idx = e.hash & sizeMask;
                 if (next == null)   //  Single node on list
-                    newTable[idx] = e;
+                    newTable[idx] = e;  // 链表中只有一个节点
                 else { // Reuse consecutive sequence at same slot
                     HashEntry<K,V> lastRun = e;
                     int lastIdx = idx;
@@ -276,7 +276,7 @@
                             lastIdx = k;
                             lastRun = last;
                         }
-                    }
+                    }   // 该for循环找到链表中最后一个index不等于第一个节点的节点
                     newTable[lastIdx] = lastRun;
                     // Clone remaining nodes
                     for (HashEntry<K,V> p = e; p != lastRun; p = p.next) {
@@ -290,8 +290,8 @@
             }
         }
         int nodeIndex = node.hash & sizeMask; // add the new node
-        node.setNext(newTable[nodeIndex]);
-        newTable[nodeIndex] = node;
+        node.setNext(newTable[nodeIndex]);      // newTable[nodeIndex]是null，所以这里是让 node.next -> null，指向null。
+        newTable[nodeIndex] = node;             // 新节点 node 放到 newTable[nodeIndex] 位置
         table = newTable;
     }
 ```
