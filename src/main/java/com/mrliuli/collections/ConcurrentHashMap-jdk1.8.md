@@ -110,7 +110,7 @@
                 // sizeCtl < 0 说明有其它线程正在进行初始化，所以当前线程让步，等待其他线程操作完成
                 Thread.yield(); // lost initialization race; just spin
                 // 原子操作变量 sizeCtl，当且仅当 sizeCtl = sc 时，才将sizeCtl 设为 -1，下面代码是初始化node数组，
-                // 所以 sizeCtl = -1 时，表示node数组正在进行初始化。Unsafe类参考：todo
+                // 所以 sizeCtl = -1 时，表示node数组正在进行初始化或正大扩容。Unsafe类参考：todo
             else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
                 try {
                     // 二次检验 node table 是否初始化
