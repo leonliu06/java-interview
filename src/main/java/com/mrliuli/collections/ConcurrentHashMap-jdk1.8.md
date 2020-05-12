@@ -120,11 +120,13 @@
                         @SuppressWarnings("unchecked")
                         Node<K,V>[] nt = (Node<K,V>[])new Node<?,?>[n]; // 创建Node数组
                         table = tab = nt;
-                        sc = n - (n >>> 2); // 初始时，n=16, sc=12
+                        // 初始化完成，sc 等于 table 大小的 0.75 倍：n 是 table 大小16，n >>> 2 等价于 n/4
+                        // n - (n >>> 2) 等价于 n - n/4，等价于 n*0.75
+                        sc = n - (n >>> 2);
                     }
                 } finally {
-                    // 初始化完成后，总是设置 sizeCtl
-                    sizeCtl = sc;   // sizeCtl = 12
+                    // 初始化完成后，设置 sizeCtl 等于 table 的容量（table 大小的 0.75 倍）
+                    sizeCtl = sc;
                 }
                 break;
             }
