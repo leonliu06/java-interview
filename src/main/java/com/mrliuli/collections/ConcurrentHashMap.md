@@ -60,6 +60,7 @@
     public V put(K key, V value) {
         Segment<K,V> s;
         if (value == null)
+            // key 和 value 都不可以为 null
             throw new NullPointerException();
         int hash = hash(key);
         // 根据 key 的 hash 值确定 segments 数组中的某一个 segment 索引 j
