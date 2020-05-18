@@ -20,7 +20,7 @@
      * creation, or 0 for default. After initialization, holds the
      * next element count value upon which to resize the table.
      */
-     // 用来控制 Node 数组 table 初始化和扩容时的并发控制，当为负值时，表示数组 table 下在初始化或扩容。
+     // 用来控制 Node 数组 table 初始化和扩容时的并发控制，当为负值时，表示数组 table 正在初始化或扩容。
     private transient volatile int sizeCtl;
 ```
 
@@ -38,43 +38,47 @@
         int binCount = 0;
         for (Node<K,V>[] tab = table;;) {
             Node<K,V> f; int n, i, fh;
+            // Node 数组 table 为空，则先初始化
             if (tab == null || (n = tab.length) == 0)
                 // 第一次插入元素时，初始化 node table 数组，参考下面 2.1
                 tab = initTable();
+            // Node 数组 table 不为空，根据要添加的元素的 hash 确定一下数组 table 所在索引处元素是否为空
             else if ((f = tabAt(tab, i = (n - 1) & hash)) == null) {
+                // 如为空，则通过CAS方法控制并发，设置要添加的元素
                 if (casTabAt(tab, i, null,
                              new Node<K,V>(hash, key, value, null)))
                     break;                   // no lock when adding to empty bin
             }
-            else if ((fh = f.hash) == MOVED)
+            else if ((fh = f.hash) == MOVED)    // 当前Map正大扩容，先协助扩容，再更新值
                 tab = helpTransfer(tab, f);
-            else {
+            else {  // hash 冲突
                 V oldVal = null;
                 synchronized (f) {
-                    if (tabAt(tab, i) == f) {
+                    if (tabAt(tab, i) == f) {   // 链表头节点
                         if (fh >= 0) {
                             binCount = 1;
                             for (Node<K,V> e = f;; ++binCount) {
                                 K ek;
                                 if (e.hash == hash &&
                                     ((ek = e.key) == key ||
-                                     (ek != null && key.equals(ek)))) {
+                                     (ek != null && key.equals(ek)))) { // 节点已经存在（key相同，== 或 equal），修改节点的值
                                     oldVal = e.val;
                                     if (!onlyIfAbsent)
                                         e.val = value;
                                     break;
                                 }
                                 Node<K,V> pred = e;
-                                if ((e = e.next) == null) {
+                                if ((e = e.next) == null) { // 遍历到末尾节点为空，则将新节点插入到此处，即链表末尾
                                     pred.next = new Node<K,V>(hash, key,
                                                               value, null);
                                     break;
                                 }
                             }
                         }
-                        else if (f instanceof TreeBin) {
+                        else if (f instanceof TreeBin) {    // 红黑树根节点
                             Node<K,V> p;
                             binCount = 2;
+                            // 找到或添加一个节点，如找到，返回该节点，如添加，返回null
                             if ((p = ((TreeBin<K,V>)f).putTreeVal(hash, key,
                                                            value)) != null) {
                                 oldVal = p.val;
@@ -85,7 +89,7 @@
                     }
                 }
                 if (binCount != 0) {
-                    if (binCount >= TREEIFY_THRESHOLD)
+                    if (binCount >= TREEIFY_THRESHOLD)  // 链表节点数量超过8，转为红黑树
                         treeifyBin(tab, i);
                     if (oldVal != null)
                         return oldVal;
@@ -93,7 +97,7 @@
                 }
             }
         }
-        addCount(1L, binCount);
+        addCount(1L, binCount);     // 统计节点个数，检查是否需要resize
         return null;
     }
 ```
