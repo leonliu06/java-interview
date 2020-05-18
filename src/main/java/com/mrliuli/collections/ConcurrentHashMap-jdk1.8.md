@@ -68,8 +68,8 @@
                 synchronized (f) {
                     if (tabAt(tab, i) == f) {   // 链表头节点
                         if (fh >= 0) {
-                            binCount = 1;
-                            for (Node<K,V> e = f;; ++binCount) {
+                            binCount = 1;   // binCount 用于记录 node 数组 table 当前位置的链表有几个节点
+                            for (Node<K,V> e = f;; ++binCount) {    // 遍历链表，每遍历一个节点，binCount 加 1
                                 K ek;
                                 if (e.hash == hash &&
                                     ((ek = e.key) == key ||
