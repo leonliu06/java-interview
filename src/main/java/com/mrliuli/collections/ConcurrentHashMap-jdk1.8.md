@@ -1,7 +1,7 @@
 ## ConcurrentHashMap源码（jdk1.8）阅读
 
 ### 1. 部分字段
-#### 1.1 table
+#### 1.1 `table`
 ```
     /**
      * The array of bins. Lazily initialized upon first insertion.
@@ -10,7 +10,7 @@
      // node 数组，大小是2的幂
     transient volatile Node<K,V>[] table;
 ```
-#### 1.2 sizeCtl
+#### 1.2 `sizeCtl`
 ```
     /**
      * Table initialization and resizing control.  When negative, the
@@ -22,6 +22,18 @@
      */
      // 用来控制 Node 数组 table 初始化和扩容时的并发控制，当为负值时，表示数组 table 正在初始化或扩容。
     private transient volatile int sizeCtl;
+```
+#### 1.3 `MIN_TREEIFY_CAPACITY = 64`
+```
+    /**
+     * The smallest table capacity for which bins may be treeified.
+     * (Otherwise the table is resized if too many nodes in a bin.)
+     * The value should be at least 4 * TREEIFY_THRESHOLD to avoid
+     * conflicts between resizing and treeification thresholds.
+     */
+     // 允许 table 数组坑位上的链表出现红黑树的最小表大小，即如果 table 大小小于64，有某索引位置上的链表长度超过8时，
+     // 不会首先转为红黑树，而是扩容node数组 table，重新分配该索引位置上的元素，以避免元素分配不均。
+    static final int MIN_TREEIFY_CAPACITY = 64;
 ```
 
 ### 2. `put(K key, V value)` 方法
@@ -173,3 +185,4 @@
         }
     }
 ```
+### 2.3 `void treeifyBin(Node<K,V>[] tab, int index)` 方法
