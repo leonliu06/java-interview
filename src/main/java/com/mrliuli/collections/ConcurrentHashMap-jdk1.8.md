@@ -138,3 +138,38 @@
         return tab;
     }
 ```
+### 2.2 `void treeifyBin(Node<K,V>[] tab, int index)` 方法
+```
+    /**
+     * Replaces all linked nodes in bin at given index unless table is
+     * too small, in which case resizes instead.
+     */
+     // 将索引 index 处的链表转化为红黑树，如果 node数组 table 长度小于 64，则不转化，而是扩容 
+    private final void treeifyBin(Node<K,V>[] tab, int index) {
+        Node<K,V> b; int n, sc;
+        if (tab != null) {
+            if ((n = tab.length) < MIN_TREEIFY_CAPACITY)    // 表长度小于64
+                tryPresize(n << 1); // 进行扩容，调整某个链表中节点数量过多的问题
+            else if ((b = tabAt(tab, index)) != null && b.hash >= 0) {  该索引处存在节点，且节点哈希值大于等于0
+                synchronized (b) {  // 对链表第一个节点加锁
+                    if (tabAt(tab, index) == b) {   // 双重校验，第一个节点没有变化
+                        TreeNode<K,V> hd = null, tl = null;
+                        for (Node<K,V> e = b; e != null; e = e.next) {
+                            // 新生成一个treeNode节点
+                            TreeNode<K,V> p =
+                                new TreeNode<K,V>(e.hash, e.key, e.val,
+                                                  null, null);
+                            if ((p.prev = tl) == null)  // 该节点前驱为空，设p为头节点
+                                hd = p;
+                            else
+                                tl.next = p;    // 尾节点的next域设为p
+                            tl = p;     // 尾节点赋值为p
+                        }
+                        // 设置table表中下标为index的值为hd
+                        setTabAt(tab, index, new TreeBin<K,V>(hd));
+                    }
+                }
+            }
+        }
+    }
+```
