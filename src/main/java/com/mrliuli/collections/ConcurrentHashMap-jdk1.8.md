@@ -101,7 +101,7 @@
                     }
                 }
                 if (binCount != 0) {
-                    if (binCount >= TREEIFY_THRESHOLD)  // 链表节点数量超过8，转为红黑树
+                    if (binCount >= TREEIFY_THRESHOLD)  // 链表节点数量超过8，转为红黑树，说明是先插入元素到链表，然后再判断要不要转为红黑树
                         treeifyBin(tab, i);
                     if (oldVal != null)
                         return oldVal;
