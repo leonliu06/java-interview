@@ -189,4 +189,57 @@
         }
     }
 ```
-### 2.3 `void treeifyBin(Node<K,V>[] tab, int index)` 方法
+### 2.3 `void addCount(long x, int check)` 方法
+```
+    /**
+     * Adds to count, and if table is too small and not already
+     * resizing, initiates transfer. If already resizing, helps
+     * perform transfer if work is available.  Rechecks occupancy
+     * after a transfer to see if another resize is already needed
+     * because resizings are lagging additions.
+     *
+     * @param x the count to add
+     * @param check if <0, don't check resize, if <= 1 only check if uncontended
+     */
+     // 新增节点后，将 baseCount + x，用 CAS 方法更新 baseCount 的值，并检测是否需要扩容
+     // 如果节点数量baseCount >= table容量sieCtl时，如果没有其它线程在扩容，则进行扩容，如果有其它线程在进行扩容，则协助扩容。
+    private final void addCount(long x, int check) {
+        CounterCell[] as; long b, s;
+        // 利用 Unsafe 类 CAS 更新 baseCount
+        if ((as = counterCells) != null ||
+            !U.compareAndSwapLong(this, BASECOUNT, b = baseCount, s = b + x)) { // counterCells 非空或比较交换失败
+            CounterCell a; long v; int m;
+            boolean uncontended = true;     // 无竞争
+            if (as == null || (m = as.length - 1) < 0 ||
+                (a = as[ThreadLocalRandom.getProbe() & m]) == null ||
+                !(uncontended =
+                  U.compareAndSwapLong(a, CELLVALUE, v = a.value, v + x))) {
+                fullAddCount(x, uncontended); // 当前线程更新失败，则执行 fullAddCount，把x的值插入到counterCell类中
+                return;
+            }
+            if (check <= 1)
+                return;
+            s = sumCount();     // 保存节点数量
+        }
+        if (check >= 0) {
+            Node<K,V>[] tab, nt; int n, sc;
+            while (s >= (long)(sc = sizeCtl) && (tab = table) != null &&
+                   (n = tab.length) < MAXIMUM_CAPACITY) {   // 节点数量大于等于 table 容量 sizeCtl，进行扩容操作
+                int rs = resizeStamp(n);
+                if (sc < 0) {   // sc = sizeCtl, 小于0表示有其它线程正在初始化或扩容
+                    // sc 无符号右移
+                    if ((sc >>> RESIZE_STAMP_SHIFT) != rs || sc == rs + 1 ||
+                        sc == rs + MAX_RESIZERS || (nt = nextTable) == null ||
+                        transferIndex <= 0)     // 其它线程正在初始化
+                        break;
+                    if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) // 其它线程正大扩容，协助扩容
+                        transfer(tab, nt);
+                }
+                else if (U.compareAndSwapInt(this, SIZECTL, sc,
+                                             (rs << RESIZE_STAMP_SHIFT) + 2))
+                    transfer(tab, null);    // 当前线程进行扩容
+                s = sumCount();
+            }
+        }
+    }
+```
