@@ -52,7 +52,7 @@
     /**
      * The next table index (plus one) to split while resizing.
      */
-     // 下一步要扩容后的表的大小
+     // table扩容（元素迁移）时，当前table的长度
     private transient volatile int transferIndex;
 ```
 
