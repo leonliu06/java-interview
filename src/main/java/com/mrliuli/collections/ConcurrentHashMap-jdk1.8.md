@@ -20,7 +20,11 @@
      * creation, or 0 for default. After initialization, holds the
      * next element count value upon which to resize the table.
      */
-     // 用来控制 Node 数组 table 初始化和扩容时的并发控制，当为负值时，表示数组 table 正在初始化或扩容。
+     // 用来控制 Node 数组 table 初始化和扩容时的并发控制，当为负值时，表示数组 table 正在初始化或扩容。默认为0
+     // -1 代表正在初始化
+     // -N 表示有 N-1 个线程正在进行扩容操作
+     // 如果table未初始化，表示table需要初始化的大小。
+     // 如果table已初始化，表示table的容量，默认是table大小的0.75倍
     private transient volatile int sizeCtl;
 ```
 #### 1.3 `MIN_TREEIFY_CAPACITY = 64`
@@ -126,7 +130,7 @@
                 // sizeCtl < 0 说明有其它线程正在进行初始化，所以当前线程让步，等待其他线程操作完成
                 Thread.yield(); // lost initialization race; just spin
                 // 原子操作变量 sizeCtl，当且仅当 sizeCtl = sc 时，才将sizeCtl 设为 -1，下面代码是初始化node数组，
-                // 所以 sizeCtl = -1 时，表示node数组正在进行初始化或正大扩容。Unsafe类参考：todo
+                // 所以 sizeCtl = -1 时，表示node数组正在进行初始化或正在扩容。Unsafe类参考：todo
             else if (U.compareAndSwapInt(this, SIZECTL, sc, -1)) {
                 try {
                     // 二次检验 node table 是否初始化
