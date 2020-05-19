@@ -134,7 +134,7 @@
     }
 ```
 
-#### 2.1 `Node<K,V>[] initTable()` 方法
+#### 2.1 `Node<K,V>[] initTable()` 初始化node数组table方法
 ```
     /**
      * Initializes table, using the size recorded in sizeCtl.
@@ -170,7 +170,7 @@
         return tab;
     }
 ```
-#### 2.2 `void treeifyBin(Node<K,V>[] tab, int index)` 方法
+#### 2.2 `void treeifyBin(Node<K,V>[] tab, int index)` 链表转红黑树方法
 ```
     /**
      * Replaces all linked nodes in bin at given index unless table is
@@ -205,7 +205,7 @@
         }
     }
 ```
-#### 2.3 `void addCount(long x, int check)` 方法
+#### 2.3 `void addCount(long x, int check)` 增加节点数量方法
 ```
     /**
      * Adds to count, and if table is too small and not already
@@ -259,3 +259,4 @@
         }
     }
 ```
+#### 2.4 `void transfer(Node<K,V>[] tab, Node<K,V>[] nextTab)` 扩容方法
