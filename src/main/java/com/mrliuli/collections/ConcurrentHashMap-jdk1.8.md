@@ -39,6 +39,22 @@
      // 不会首先转为红黑树，而是扩容node数组 table，重新分配该索引位置上的元素，以避免元素分配不均。
     static final int MIN_TREEIFY_CAPACITY = 64;
 ```
+#### 1.4 `nextTable`
+```
+    /**
+     * The next table to use; non-null only while resizing.
+     */
+     // table 扩容时，将要扩容后的表，仅正在扩容时非空。
+    private transient volatile Node<K,V>[] nextTable;
+```
+#### 1.5 `transferIndex`
+```
+    /**
+     * The next table index (plus one) to split while resizing.
+     */
+     // 下一步要扩容后的表的大小
+    private transient volatile int transferIndex;
+```
 
 ### 2. `put(K key, V value)` 方法
 ```
@@ -118,7 +134,7 @@
     }
 ```
 
-### 2.1 `Node<K,V>[] initTable()` 方法
+#### 2.1 `Node<K,V>[] initTable()` 方法
 ```
     /**
      * Initializes table, using the size recorded in sizeCtl.
@@ -154,7 +170,7 @@
         return tab;
     }
 ```
-### 2.2 `void treeifyBin(Node<K,V>[] tab, int index)` 方法
+#### 2.2 `void treeifyBin(Node<K,V>[] tab, int index)` 方法
 ```
     /**
      * Replaces all linked nodes in bin at given index unless table is
@@ -189,7 +205,7 @@
         }
     }
 ```
-### 2.3 `void addCount(long x, int check)` 方法
+#### 2.3 `void addCount(long x, int check)` 方法
 ```
     /**
      * Adds to count, and if table is too small and not already
