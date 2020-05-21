@@ -296,7 +296,7 @@
             // 下面while代码第一次执行后，i值等于15，即先处理node数组索引15处的节点，bound值等于0
             while (advance) {
                 int nextIndex, nextBound;
-                if (--i >= bound || finishing)
+                if (--i >= bound || finishing)  // 扩容时，遍历元素是按索引i从大到小开始遍历的
                     advance = false;
                 else if ((nextIndex = transferIndex) <= 0) {
                     i = -1;
@@ -335,7 +335,7 @@
                 synchronized (f) {
                     if (tabAt(tab, i) == f) {
                         Node<K,V> ln, hn;
-                        if (fh >= 0) {
+                        if (fh >= 0) {  // i处节点hash>=0，常规链表节点
                             int runBit = fh & n;
                             Node<K,V> lastRun = f;
                             for (Node<K,V> p = f.next; p != null; p = p.next) {
@@ -360,9 +360,12 @@
                                 else
                                     hn = new Node<K,V>(ph, pk, pv, hn);
                             }
+                            // 在 nextTabl i 位置插入链表 ln
                             setTabAt(nextTab, i, ln);
+                            // 在 nextTabl i+n 位置插入链表 hn
                             setTabAt(nextTab, i + n, hn);
                             setTabAt(tab, i, fwd);
+                            // 标记为true，回到上面的while循环，以执行--i操作，
                             advance = true;
                         }
                         else if (f instanceof TreeBin) {
