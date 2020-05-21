@@ -311,6 +311,7 @@
                     advance = false;
                 }
             }
+            // 第一次走到这里时，i=15, bound=0, n=16, nextn=32
             if (i < 0 || i >= n || i + n >= nextn) {
                 int sc;
                 if (finishing) {
@@ -327,8 +328,8 @@
                 }
             }
             else if ((f = tabAt(tab, i)) == null)
-                advance = casTabAt(tab, i, null, fwd);
-            else if ((fh = f.hash) == MOVED)
+                advance = casTabAt(tab, i, null, fwd);  // 如果i索引位置节点f为空，则把 fwd 节点放进来
+            else if ((fh = f.hash) == MOVED)    // 上面已经说过，fwd节点的hash为MOVED，所以如果i处节点hash为MOVED，则该节点是fwd节点，已遍历并处理过
                 advance = true; // already processed
             else {
                 synchronized (f) {
