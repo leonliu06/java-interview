@@ -332,17 +332,21 @@
             else if ((fh = f.hash) == MOVED)    // 上面已经说过，fwd节点的hash为MOVED，所以如果i处节点hash为MOVED，则该节点是fwd节点，已遍历并处理过
                 advance = true; // already processed
             else {
+                // f 表示当前位置i索引处的节点
                 synchronized (f) {
                     if (tabAt(tab, i) == f) {
                         Node<K,V> ln, hn;
                         if (fh >= 0) {  // i处节点hash>=0，常规链表节点
+                            // fh 是节点f的hash，n 是原数组的长度，数组长度是2的n次方，初始默认是16，即二进制 10000，
+                            // 所以 fh & n 的结果 runBit（移动位）要么是 0，要么是 n（初始默认时，二进制 10000）
                             int runBit = fh & n;
-                            Node<K,V> lastRun = f;
+                            Node<K,V> lastRun = f;  // lastRun 要移动的节点
+                            // 遍历链表，p为f的后驱节点
                             for (Node<K,V> p = f.next; p != null; p = p.next) {
                                 int b = p.hash & n;
-                                if (b != runBit) {
-                                    runBit = b;
-                                    lastRun = p;
+                                if (b != runBit) {  // 当后驱节点的hash&n的结果b不等于bunBit时，lastRun 记录该节点
+                                    runBit = b;     // 所以，p的后驱节点 p.hash&n 不变时，lastRun 就不会指向后面节点
+                                    lastRun = p;    // 因为 lastRun 是要移动的节点，所以这样做，可以使得lastRun后面的节点不用移动
                                 }
                             }
                             if (runBit == 0) {
