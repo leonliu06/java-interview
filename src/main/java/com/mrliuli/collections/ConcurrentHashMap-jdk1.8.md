@@ -289,8 +289,11 @@
         ForwardingNode<K,V> fwd = new ForwardingNode<K,V>(nextTab);
         boolean advance = true;
         boolean finishing = false; // to ensure sweep before committing nextTab
+        // 自循环处理node数组每个槽位（数组每个索引位置）中的链表元素
         for (int i = 0, bound = 0;;) {
             Node<K,V> f; int fh;
+            // 通过CAS方法设置属性transferIndex的值，并初始化i和bound，i指当前处理node数组的槽位，bound指需要处理的槽位边界，
+            // 下面while代码第一次执行后，i值等于15，即先处理node数组索引15处的节点，bound值等于0
             while (advance) {
                 int nextIndex, nextBound;
                 if (--i >= bound || finishing)
