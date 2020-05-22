@@ -359,15 +359,15 @@
                             }
                             for (Node<K,V> p = f; p != lastRun; p = p.next) {
                                 int ph = p.hash; K pk = p.key; V pv = p.val;
-                                if ((ph & n) == 0)
+                                if ((ph & n) == 0)  // 上面提到，hash & n的结果要么是0，要么是n，这里 ln记录是0的节点
                                     ln = new Node<K,V>(ph, pk, pv, ln);
                                 else
-                                    hn = new Node<K,V>(ph, pk, pv, hn);
+                                    hn = new Node<K,V>(ph, pk, pv, hn); // hn记录是n的节点
                             }
                             // 在 nextTabl i 位置插入链表 ln
-                            setTabAt(nextTab, i, ln);
+                            setTabAt(nextTab, i, ln);   // hash & n 是0的节点保留原位置不动
                             // 在 nextTabl i+n 位置插入链表 hn
-                            setTabAt(nextTab, i + n, hn);
+                            setTabAt(nextTab, i + n, hn);   // hash & n是1的节点移动n位
                             setTabAt(tab, i, fwd);
                             // 标记为true，回到上面的while循环，以执行--i操作，
                             advance = true;
