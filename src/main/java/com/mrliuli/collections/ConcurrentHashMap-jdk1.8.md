@@ -357,17 +357,20 @@
                                 hn = lastRun;
                                 ln = null;
                             }
+                            // 链表顺序遍历
                             for (Node<K,V> p = f; p != lastRun; p = p.next) {
                                 int ph = p.hash; K pk = p.key; V pv = p.val;
-                                if ((ph & n) == 0)  // 上面提到，hash & n的结果要么是0，要么是n，这里 ln记录是0的节点
+                                if ((ph & n) == 0)  // 上面提到，hash & n的结果要么是0，要么是n，这里 ln保存是0的节点
                                     ln = new Node<K,V>(ph, pk, pv, ln);
                                 else
-                                    hn = new Node<K,V>(ph, pk, pv, hn); // hn记录是n的节点
+                                    hn = new Node<K,V>(ph, pk, pv, hn); // hn是n保存是n的节点
                             }
+                            // 以上 for 循环结束后，该 i 位置处的链表创建出来了两个新的链表，一个是 ln，为 p.hash & n 为 0 的节点构成的链表
+                            // 一个是 hn，为 p.hash & n 为 1 的节点构成的链表，两个链表中的节点还是保留原来的先后顺序。
                             // 在 nextTabl i 位置插入链表 ln
-                            setTabAt(nextTab, i, ln);   // hash & n 是0的节点保留原位置不动
+                            setTabAt(nextTab, i, ln);   // hash & n 为 0 的节点保留原位置不动
                             // 在 nextTabl i+n 位置插入链表 hn
-                            setTabAt(nextTab, i + n, hn);   // hash & n是1的节点移动n位
+                            setTabAt(nextTab, i + n, hn);   // hash & n 为 1 的节点向后移动n位，新位置为 i + n
                             setTabAt(tab, i, fwd);
                             // 标记为true，回到上面的while循环，以执行--i操作，
                             advance = true;
