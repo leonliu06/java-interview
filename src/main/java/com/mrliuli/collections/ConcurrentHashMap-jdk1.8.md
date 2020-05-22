@@ -375,6 +375,7 @@
                             // 标记为true，回到上面的while循环，以执行--i操作，
                             advance = true;
                         }
+                        // 树节点
                         else if (f instanceof TreeBin) {
                             TreeBin<K,V> t = (TreeBin<K,V>)f;
                             TreeNode<K,V> lo = null, loTail = null;
@@ -401,6 +402,7 @@
                                     ++hc;
                                 }
                             }
+                            // 如果树中的结点数量小于等于6，则将树转化为链表
                             ln = (lc <= UNTREEIFY_THRESHOLD) ? untreeify(lo) :
                                 (hc != 0) ? new TreeBin<K,V>(lo) : t;
                             hn = (hc <= UNTREEIFY_THRESHOLD) ? untreeify(hi) :
