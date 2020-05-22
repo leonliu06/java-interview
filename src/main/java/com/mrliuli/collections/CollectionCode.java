@@ -15,10 +15,11 @@ public class CollectionCode {
     /**
      * 1 -为什么HashMap不是线程安全的？
      * 1.1 线程T1和T2同时对一个HashMap进行put操作，如产生hash碰撞，正常情况下，会形成链表，并发情况下，有可能T2线程会覆盖T1线程put的元素。
-     * 1.2 线程T1和T2同时对一个HashMap进行resize操作，在jdk1.7中可能出现循环链表，使get一个不存在的元素时，造成死循环，在jdk1.8中不会。
-     *  所以，HashMap的线程不安全主要体现在下面两个方面：
-     *      1.在JDK1.7中，当并发执行扩容操作时会造成环形链和数据丢失的情况。
-     *      2.在JDK1.8中，在并发执行put操作时会发生数据覆盖的情况。
+     * 1.2 线程T1和T2同时对一个HashMap进行resize操作，因jdk1.7中，扩容时，移动元素生成新链表是按头插法进行的，可能出现循环链表，
+     * 使得get一个不存在的元素，且该元素索引位置在循环链表位置时，造成对环形链表的死循环遍历，在jdk1.8中不会。
+     *  所以，HashMap的线程不安全主要体现如下：
+     *      1.在JDK1.7中，当并发执行put操作时，会造成数据丢失，并发扩容操作时会造成死循环的情况。
+     *      2.在JDK1.8中，当并发执行put操作时，也会造成数据丢失，但不会形成环形链表，所以不会出现死循环情况。
      */
 
     /**
@@ -28,7 +29,7 @@ public class CollectionCode {
      * 2.3 HashSet 底层 使用 HashMap 实现，.add() 添加一个值时，会作为 HashMap 的 key 来计算 添加
      *
      * 所以，HashSet 存储的值是不重复的，HashMap 存储的 key 是不重复的，但 key 对应的 值可以重复，
-     * HashSet 和 HashMap 中的key都可以存储 null，ConcurrentHashMap 中的 key 不可以为 null，会报空指针异常
+     * HashSet 和 HashMap 中的key都可以存储 null，ConcurrentHashMap 中的 key 和 value 都不可以为 null，否则报空指针异常
      */
 
     /**
@@ -59,6 +60,13 @@ public class CollectionCode {
 
     public static void main(String[] args){
         CollectionCode.run();
+        ConcurrentHashMap<String, String> concurrentHashMap = new ConcurrentHashMap<>();
+        HashMap<String, String> hashMap = new HashMap<>();
+        for(int i = 0; i < 50; i++){
+            concurrentHashMap.put(String.valueOf(i), "a");
+        }
+        concurrentHashMap.put("test", "aaaa");
+        System.out.println("xx");
     }
 
 }
