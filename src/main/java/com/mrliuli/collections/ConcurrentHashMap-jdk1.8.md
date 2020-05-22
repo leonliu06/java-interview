@@ -1,5 +1,8 @@
 ## ConcurrentHashMap源码（jdk1.8）阅读
-
+- `ConcurrentHashMap`由一个`Node`数组`table`构成
+- `table`元素`Node`是一个链表结点，在`table`槽位上的链表元素大于等于8时，会转化为树，扩容时，树元素个数小于等于6时，会转化为链表
+- `ConcurrentHashMap`通过`transfer`方法扩容，扩容时，先从高位索引遍历数组`table`，然后再遍历索引处的链表或树，将链表（或树）上结点分成两个链表，一个保留在原来位置，一个向后移动`n`位
+- `ConcurrentHashMap`利用`synchronized`和`Unsave`类的`CAS`方法来控制并发
 ### 1. 部分字段
 #### 1.1 `table`
 ```
