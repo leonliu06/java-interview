@@ -55,6 +55,9 @@
     void createEntry(int hash, K key, V value, int bucketIndex) {
         Entry<K,V> e = table[bucketIndex];
         // 新元素next指针指向该索引处结点，然后再把该新元素放入该索引处，即新添加结点是从链表头节点插入
+        // 并发问题1：当有两个线程t1和t2都拿到索引bucketIndex时，如t1先执行下面赋值操作，则t2再执行时，
+        // 因为t2线程拿到的头结点还是t1未插入结点时的链表头结点，所以t2执行完成后，则table[bucketIndex]只保留了t2结点开始的链表，
+        // 所以t1刚才插入的结点就访问不到了，从而体体现为t1刚才插入的结点数据的丢失
         table[bucketIndex] = new Entry<>(hash, key, value, e);
         size++;
     }
