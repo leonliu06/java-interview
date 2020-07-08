@@ -4,12 +4,12 @@
 ### 1. `put`方法
 ```
     public V put(K key, V value) {
-        // hash() 取
+        // hash() 取 key 的哈希
         return putVal(hash(key), key, value, false, true);
     }    
     static final int hash(Object key) {
         int h;
-        // 
+        // 这里说明 key 可以为空，且为空时，hash 为 0
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);
     }
     
@@ -29,7 +29,7 @@
         if ((tab = table) == null || (n = tab.length) == 0)
             // 通过 resize 方法初始化
             n = (tab = resize()).length;
-        if ((p = tab[i = (n - 1) & hash]) == null)
+        if ((p = tab[i = (n - 1) & hash]) == null)  // 通过 (n-1) & hash 运算来定位索引
             // 该索引处元素为空，则直接插入新节点
             tab[i] = newNode(hash, key, value, null);
         else {
@@ -39,33 +39,56 @@
                 // 相同节点
                 e = p;
             else if (p instanceof TreeNode)
+                // 该索引处为树形链表，将该节点插入树形链表中
                 e = ((TreeNode<K,V>)p).putTreeVal(this, tab, hash, key, value);
             else {
+                // 遍历单链表
                 for (int binCount = 0; ; ++binCount) {
+                    // p 是遍历链表时的当前节点，如果 p 的下一节点为空，则将新节点直接插入，作为 p 的后驱节点，
+                    // 这里可以看出，新节点插入即所谓的“后插法”
                     if ((e = p.next) == null) {
                         p.next = newNode(hash, key, value, null);
+                        // TREEIFY_THRESHOLD 即 单向链表转为树形链表时的节点个数的临界阈值，从源码声明处可知为 8
+                        // 从表达式可知 binCount >= 7 为真时，因 binCount 从0开始，且此时，新节点已经插入，
+                        // 即结果是当单身链表插入第9个节点时，开始执行 treefiyBin 方法，即将单向链表转为树形链表或扩容（Node数据table大小小于64时，进行扩容）
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
+                            // 将单向链表转为树形链表或扩容（Node数据table大小小于64时，进行扩容）
                             treeifyBin(tab, hash);
                         break;
                     }
+                    // 当前节点 p 的下一节点 e 与新节点相同，则什么都不做，直接跳出循环
                     if (e.hash == hash &&
                         ((k = e.key) == key || (key != null && key.equals(k))))
                         break;
+                    // 上面 e 已赋值为 p 的下一节点，这里相当于 p = p.next;即继续遍历    
                     p = e;
                 }
             }
+            // e != null 说明 e 是索引处链表中与新节点想再的节点
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
-                if (!onlyIfAbsent || oldValue == null)
+                // 根据 onlyIfAbsent 和 oldValue == null 来确定是否改变相同key的value，默认 onlyIfAbsent 为 false
+                if (!onlyIfAbsent || oldValue == null)  // 即 默认 改变 value
                     e.value = value;
+                // 用于 LinkedHashMap 实现按节点插入顺序有序化，HashMap 什么都不做    
                 afterNodeAccess(e);
                 return oldValue;
             }
         }
+        // 记录 HashMap 中节点的修改（增加、删除、扩容等）次数
+        // 该字段用于实现 HashMap 的迭代器的 fail-fast (快速失败)，HashMap 内部类 HashIterator 中有变量 expectedModCount，
+        // 迭代器迭代过程中，当 expectedModCount != modCount 时，就 throw new ConcurrentModificationException(); 快速失败，
+        // 以避免迭代器在遍历集合时，别的线程修改集合，使得遍历出现问题
         ++modCount;
+        // 当集合中元素数量大于扩容临界数量时，进行扩容
         if (++size > threshold)
             resize();
+        // 用于 LinkedHashMap 实现按节点插入顺序有序化，HashMap 什么都不做
         afterNodeInsertion(evict);
         return null;
     }
 ```
+
+### 2. `resize`方法
+
+### 3. `treeifyBin`方法
