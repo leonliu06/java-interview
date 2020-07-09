@@ -33,21 +33,35 @@ public class CollectionCode {
      */
 
     /**
-     * 3 HashMap源码（jdk8）
-     * 3.1 put操作时，如哈希碰撞，元素插入链表是从尾部插入（jdk7是从头部插入）
-     * 3.2 put操作时，如第一次put，即table为空时，则先调用resize，然后put，非第一次，即table.length > 0时，则先put，再resize。
-     * 3.3 resize重新分配元素时，链表上的元素，最多会分为两部分，一部分分配在原来的低位位置，另一部分分配到新扩容的高位位置。
+     * 3 HashMap源码（jdk7）
+     * 3.1 `HashMap`类主要由一个`Entry`数组`Entry<K,V>[] table`构成;
+     */
+
+    /**
+     * 4 HashMap源码（jdk8）
+     * 4.1 HashMap`类主要由一个`Node`数组`Node<K,V>[] table`构成;
+     * 4.2 put操作时，如哈希碰撞，元素插入链表是从尾部插入（jdk7是从头部插入）
+     * 4.3 put操作时，如第一次put，即table为空时，则先调用resize，然后put，非第一次，即table.length > 0时，则先put，再resize。
+     * 4.4 resize重新分配元素时，链表上的元素，最多会分为两部分，一部分分配在原来的低位位置，另一部分分配到新扩容的高位位置。
      */
 
 
     /**
-     * 4 ConcurrentHashMap源码（jdk1.7）
-     * 4.1 ConcurrentHashMap类主要由一个Segment数组（Segment<K,V>[] segments）构成，每个Segment是一个HashMap；
-     * 4.2 Segment的数量size为并发级别concurrencyLevel的大小，默认为 DEFAULT_CONCURRENCY_LEVEL = 16；
-     * 4.3 每个Segment表的容量为ConcurrentHashMap初始容量initialCapacity（默认为DEFAULT_INITIAL_CAPACITY = 16）
+     * 5 ConcurrentHashMap源码（jdk1.7）
+     * 5.1 ConcurrentHashMap类主要由一个Segment数组（Segment<K,V>[] segments）构成；
+     * 5.2 Segment的数量size为并发级别concurrencyLevel的大小，默认为 DEFAULT_CONCURRENCY_LEVEL = 16；
+     * 5.3 每个Segment表的容量为ConcurrentHashMap初始容量initialCapacity（默认为DEFAULT_INITIAL_CAPACITY = 16）
      *      除以Segment的数量ssize，最小容量为2（MIN_SEGMENT_TABLE_CAPACITY = 2）；
-     * 4.4 Segment是一个ReentrantLock类，含有一个HashEntry<K,V>[]数组（HashEntry<K,V>[] table）;
+     * 5.4 Segment是一个ReentrantLock类，含有一个HashEntry<K,V>[]数组（HashEntry<K,V>[] table）;
      *
+     */
+
+    /**
+     * 6 ConcurrentHashMap源码（jdk1.8）
+     * 6.1 `ConcurrentHashMap`由一个`Node`数组`table`构成
+     * 6.2 `table`元素`Node`是一个链表结点，在`table`槽位上的链表元素大于等于`8`，并且`Node`数组`table`的长度大于`64`时，会转化为树形链表，扩容时，树元素个数小于等于6时，会转化为链表
+     * 6.3 `ConcurrentHashMap`通过`transfer`方法扩容，扩容时，先从高位索引遍历数组`table`，然后再遍历索引处的链表或树，将链表（或树）上结点分成两个链表，一个保留在原来位置，一个向后移动`n`位
+     * 6.4 `ConcurrentHashMap`利用`synchronized`和`Unsafe`类的`CAS`方法来控制并发
      */
 
 
