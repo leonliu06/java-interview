@@ -1,7 +1,7 @@
 ## HashMap源码（jdk1.8）阅读
 - `HashMap`类主要由一个`Node`数组`Node<K,V>[] table`构成;
 
-### 1. `put`方法
+### 1. `put`方法，添加元素
 ```
     public V put(K key, V value) {
         // hash() 取 key 的哈希
@@ -89,6 +89,95 @@
     }
 ```
 
-### 2. `resize`方法
-
-### 3. `treeifyBin`方法
+### 2. `resize`方法，初始化或扩容
+```
+    /**
+     * Initializes or doubles table size.  If null, allocates in
+     * accord with initial capacity target held in field threshold.
+     * Otherwise, because we are using power-of-two expansion, the
+     * elements from each bin must either stay at same index, or move
+     * with a power of two offset in the new table.
+     *
+     * @return the table
+     */
+    // 初始化或2倍扩容。如 table 为 null，则按初始容量初始化。
+    // 否则，2倍扩容，扩容后，原索引处链表上的元素在新表 table 上的位置，要么留在索引原位，要么移动 n 位，n 为原表 table 的长度 
+    final Node<K,V>[] resize() {
+        Node<K,V>[] oldTab = table;
+        int oldCap = (oldTab == null) ? 0 : oldTab.length;
+        int oldThr = threshold;
+        int newCap, newThr = 0;
+        if (oldCap > 0) {
+            if (oldCap >= MAXIMUM_CAPACITY) {   // 原表容量已经大于最大容量了，则不再扩容，返回自己
+                threshold = Integer.MAX_VALUE;
+                return oldTab;
+            }
+            // newCap = oldCap << 1，即新容量扩大为原来的 2 倍
+            else if ((newCap = oldCap << 1) < MAXIMUM_CAPACITY &&
+                     oldCap >= DEFAULT_INITIAL_CAPACITY)
+                newThr = oldThr << 1; // double threshold   // 新临界容量也扩大 2 倍
+        }
+        else if (oldThr > 0) // initial capacity was placed in threshold
+            newCap = oldThr;
+        else {               // zero initial threshold signifies using defaults // 值为 0 ，表示开始初始化，使用默认值
+            newCap = DEFAULT_INITIAL_CAPACITY;  // 默认初始容量 16
+            newThr = (int)(DEFAULT_LOAD_FACTOR * DEFAULT_INITIAL_CAPACITY); // 0.75 * 16 = 12
+        }
+        if (newThr == 0) {
+            float ft = (float)newCap * loadFactor;
+            newThr = (newCap < MAXIMUM_CAPACITY && ft < (float)MAXIMUM_CAPACITY ?
+                      (int)ft : Integer.MAX_VALUE);
+        }
+        threshold = newThr;
+        @SuppressWarnings({"rawtypes","unchecked"})
+        Node<K,V>[] newTab = (Node<K,V>[])new Node[newCap];     // 新表
+        table = newTab;
+        if (oldTab != null) {
+            // 遍历集合
+            for (int j = 0; j < oldCap; ++j) {
+                Node<K,V> e;
+                if ((e = oldTab[j]) != null) {
+                    oldTab[j] = null;
+                    if (e.next == null)
+                        // 该索引处的链表只有一个元素 e，则直接移动该元素
+                        newTab[e.hash & (newCap - 1)] = e;
+                    else if (e instanceof TreeNode)
+                        // 树形链表，拆分节点或将树形链表转为单向链表
+                        ((TreeNode<K,V>)e).split(this, newTab, j, oldCap);
+                    else { // preserve order
+                        Node<K,V> loHead = null, loTail = null;
+                        Node<K,V> hiHead = null, hiTail = null;
+                        Node<K,V> next;
+                        // 遍历该索引处的单身链表
+                        do {
+                            next = e.next;
+                            if ((e.hash & oldCap) == 0) {
+                                if (loTail == null)
+                                    loHead = e;
+                                else
+                                    loTail.next = e;
+                                loTail = e;
+                            }
+                            else {
+                                if (hiTail == null)
+                                    hiHead = e;
+                                else
+                                    hiTail.next = e;
+                                hiTail = e;
+                            }
+                        } while ((e = next) != null);
+                        if (loTail != null) {
+                            loTail.next = null;
+                            newTab[j] = loHead;
+                        }
+                        if (hiTail != null) {
+                            hiTail.next = null;
+                            newTab[j + oldCap] = hiHead;
+                        }
+                    }
+                }
+            }
+        }
+        return newTab;
+    }
+```
