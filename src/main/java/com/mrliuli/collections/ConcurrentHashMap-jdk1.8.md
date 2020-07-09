@@ -84,7 +84,7 @@
                              new Node<K,V>(hash, key, value, null)))
                     break;                   // no lock when adding to empty bin
             }
-            else if ((fh = f.hash) == MOVED)    // 当前Map正大扩容，先协助扩容，再更新值
+            else if ((fh = f.hash) == MOVED)    // 当前Map正在扩容，先协助扩容，再更新值
                 tab = helpTransfer(tab, f);
             else {  // hash 冲突
                 V oldVal = null;
@@ -251,7 +251,7 @@
                         sc == rs + MAX_RESIZERS || (nt = nextTable) == null ||
                         transferIndex <= 0)     // 其它线程正在初始化
                         break;
-                    if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) // 其它线程正大扩容，协助扩容
+                    if (U.compareAndSwapInt(this, SIZECTL, sc, sc + 1)) // 其它线程正在扩容，协助扩容
                         transfer(tab, nt);
                 }
                 else if (U.compareAndSwapInt(this, SIZECTL, sc,
