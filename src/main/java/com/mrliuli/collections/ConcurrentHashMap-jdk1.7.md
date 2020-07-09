@@ -1,8 +1,8 @@
 ## ConcurrentHashMap源码（jdk1.7）阅读
-- `ConcurrentHashMap`类主要由一个`Segment`数组（`Segment<K,V>[] segments`）构成，每个Segment相当于一个HashMap；  
+- `ConcurrentHashMap`类主要由一个`Segment`数组（`Segment<K,V>[] segments`）构成；
+- `Segment`是一个`ReentrantLock`类，含有一个`HashEntry<K,V>[]`数组（`HashEntry<K,V>[] table`）;  
 - `Segment`的数量`size`为并发级别`concurrencyLevel`的大小，默认为 `DEFAULT_CONCURRENCY_LEVEL = 16`；  
 - 每个`Segment`表的容量为`ConcurrentHashMap`初始容量`initialCapacity`（默认为`DEFAULT_INITIAL_CAPACITY = 16`）除以Segment的数量`ssize`，最小容量为`2`（`MIN_SEGMENT_TABLE_CAPACITY = 2`）；  
-- `Segment`是一个`ReentrantLock`类，含有一个`HashEntry<K,V>[]`数组（`HashEntry<K,V>[] table`）;
 
 ### 1. 构造函数
 ```
@@ -76,8 +76,9 @@
 
 ```
 #### 2.1 `ensureSegment(int k)` 方法
-&emsp;&emsp;`ensureSegment(int k)` 方法用来在 `segment` 数组 `ss` 索引 `k` 处创建一个`segment`。该方法利用了##自旋CAS##思想，
+&emsp;&emsp;`ensureSegment(int k)` 方法用来在 `segment` 数组 `ss` 索引 `k` 处创建一个`segment`。该方法利用了**自旋CAS**思想，
 使得在不加锁的情况下保证线程安全。自旋CAS主要原理是利用`Unsafe`类中的方法来直接读写主存数据。
+
 ```
     /**
      * Returns the segment for the given index, creating it and
