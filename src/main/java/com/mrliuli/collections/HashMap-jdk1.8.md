@@ -50,7 +50,7 @@
                         p.next = newNode(hash, key, value, null);
                         // TREEIFY_THRESHOLD 即 单向链表转为树形链表时的节点个数的临界阈值，从源码声明处可知为 8
                         // 从表达式可知 binCount >= 7 为真时，因 binCount 从0开始，且此时，新节点已经插入，
-                        // 即结果是当单身链表插入第9个节点时，开始执行 treefiyBin 方法，即将单向链表转为树形链表或扩容（Node数据table大小小于64时，进行扩容）
+                        // 即结果是当单向链表插入第9个节点时，开始执行 treefiyBin 方法，即将单向链表转为树形链表或扩容（Node数据table大小小于64时，进行扩容）
                         if (binCount >= TREEIFY_THRESHOLD - 1) // -1 for 1st
                             // 将单向链表转为树形链表或扩容（Node数据table大小小于64时，进行扩容）
                             treeifyBin(tab, hash);
@@ -64,7 +64,7 @@
                     p = e;
                 }
             }
-            // e != null 说明 e 是索引处链表中与新节点想再的节点
+            // e != null 说明 e 是索引处链表中与新节点相同的节点
             if (e != null) { // existing mapping for key
                 V oldValue = e.value;
                 // 根据 onlyIfAbsent 和 oldValue == null 来确定是否改变相同key的value，默认 onlyIfAbsent 为 false
@@ -148,7 +148,7 @@
                         Node<K,V> loHead = null, loTail = null;
                         Node<K,V> hiHead = null, hiTail = null;
                         Node<K,V> next;
-                        // 遍历该索引处的单身链表
+                        // 遍历该索引处的单向链表
                         do {
                             next = e.next;
                             if ((e.hash & oldCap) == 0) {
