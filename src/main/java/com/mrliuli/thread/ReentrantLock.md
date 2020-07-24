@@ -64,7 +64,7 @@
             // hasQueuedPredecessors() 查询是否已有线程在队列中等待获取锁
             // 如没有，则调用 compareAndSetState(0, acquires) 方法
             if (!hasQueuedPredecessors() &&
-                // 利用 Unsafe类原子性修改字段值，当且公当 state == 0 时，将state设置为 acquires
+                // 利用 Unsafe类原子性修改字段值，当且仅当 state == 0 时，将state设置为 acquires
                 compareAndSetState(0, acquires)) {
                 // 设置当前线程为锁的持有者
                 setExclusiveOwnerThread(current);
