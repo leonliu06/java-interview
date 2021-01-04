@@ -18,4 +18,10 @@ dependencies {
 
     // https://mvnrepository.com/artifact/org.springframework/spring-context
     compile group: 'org.springframework', name: 'spring-context', version: '5.2.1.RELEASE'
+
+
+
+    // https://mvnrepository.com/artifact/io.shardingsphere/sharding-jdbc-spring-boot-starter
+    compile group: 'io.shardingsphere', name: 'sharding-jdbc-spring-boot-starter', version: '3.1.0'
+
 }
