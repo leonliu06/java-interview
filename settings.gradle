@@ -1,1 +1,2 @@
 rootProject.name = 'java-interview'
+include("basics")
