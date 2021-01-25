@@ -1,2 +1,2 @@
-rootProject.name = 'java-interview'
+rootProject.Name = 'java-interview'
 include("basics", "mbp")
