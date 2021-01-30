@@ -1,7 +1,5 @@
 package com.mrliuli.design.factory.abstracd;
 
-import com.mrliuli.design.factory.method.IProduct;
-
 /**
  * @author liu.li
  * @date 2021/1/26
@@ -11,6 +9,8 @@ import com.mrliuli.design.factory.method.IProduct;
  *
  */
 public class Client {
+
+    // http://c.biancheng.net/view/1351.html
 
     public static void main(String[] args) {
 
