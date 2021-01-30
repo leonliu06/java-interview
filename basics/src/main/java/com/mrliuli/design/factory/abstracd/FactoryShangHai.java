@@ -2,22 +2,22 @@ package com.mrliuli.design.factory.abstracd;
 
 /**
  * @author liu.li
- * @date 2021/1/25
+ * @date 2021/1/30
  * @description
  *
- * 抽象工厂模式
+ * 具体的上海工厂
  *
  */
-public class AbstractFactory implements IFactory {
+public class FactoryShangHai implements IFactory {
 
     @Override
     public IProductMetal produceMetal(String name) {
-        return null;
+        return new ProductShanghaiAlloy();
     }
 
     @Override
     public IProductCeramic produceCeramic(String name) {
-        return null;
+        return new ProductShanghaiVase();
     }
 
 }
