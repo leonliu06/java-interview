@@ -19,7 +19,7 @@ package com.mrliuli.design.factory.method;
  * 抽象产品只能生产一种产品，此弊端可使用抽象工厂模式解决。
  *
  * 应用场景：
- * 客户只知道创建产品的工厂名，而不知道具体的产品名。如 TCL 电视工厂、海信电视工厂等。
+ * 客户只知道创建产品的工厂名，而不知道具体的产品名。如 金属镍工厂、金属铁工厂 等。
  * 创建对象的任务由多个具体子工厂中的某一个完成，而抽象工厂只提供创建产品的接口。
  * 客户不关心创建产品的细节，只关心产品的品牌
  *
@@ -33,6 +33,10 @@ public class Client {
         IProduct product = factory.produceProduct();
 
         factory = (IFactory) ReadXML.getObject();
+
+        factory.produceProduct();
+
+        factory = new FactoryFerrite();
 
         factory.produceProduct();
 
