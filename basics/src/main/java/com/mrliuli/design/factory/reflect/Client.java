@@ -17,7 +17,11 @@ public class Client {
 
         metal = ReflectFactory.produce("Ferrite");
         metal.name();
-        
+
+        metal = ReflectFactoryGeneric.produce(com.mrliuli.design.factory.simple.Nickel.class.getName());
+
+        metal.name();
+
     }
 
 }
