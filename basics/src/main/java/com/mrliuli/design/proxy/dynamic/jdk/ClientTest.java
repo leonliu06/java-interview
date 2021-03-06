@@ -10,11 +10,11 @@ public class ClientTest {
 
     public static void main(String[] args)  {
 
-        JDKDynamicProxy jdkDynamicProxy = new JDKDynamicProxy();
-
         ITargetSubject target = new TargetSubject();
 
-        ITargetSubject proxy = jdkDynamicProxy.getDynamicProxyInstance(target);
+        JDKDynamicProxy jdkDynamicProxy = new JDKDynamicProxy(target);
+        
+        ITargetSubject proxy = jdkDynamicProxy.createDynamicProxyInstance();
 
         proxy.request();
 

@@ -1,5 +1,6 @@
 package com.mrliuli.design.proxy.dynamic.jdk;
 
+import javax.imageio.ImageTranscoder;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -9,20 +10,33 @@ import java.lang.reflect.Proxy;
  * @date 2021/3/2
  * @description
  *
- * JDK 动态代理
+ * JDK 动态代理类
  *
- * 
+ *
  *
  */
 public class JDKDynamicProxy implements InvocationHandler {
 
     private ITargetSubject targetSubject;
 
-    public ITargetSubject getDynamicProxyInstance(ITargetSubject targetSubject) {
-
+    // 持有目标对象
+    public JDKDynamicProxy(ITargetSubject targetSubject) {
         this.targetSubject = targetSubject;
-        Class<?> clazz = targetSubject.getClass();
-        return (ITargetSubject) Proxy.newProxyInstance(clazz.getClassLoader(), clazz.getInterfaces(), this);
+    }
+
+    // 将目标对象 生成 代理对象
+    public ITargetSubject createDynamicProxyInstance() {
+
+        // 获得目标对象的类型信息
+        Class targetSubjectClass = targetSubject.getClass();
+
+        // 根据类型对象获取其类加载器
+        ClassLoader classLoader = targetSubjectClass.getClassLoader();
+
+        // 根据类型对象获取 对象实现的 所有接口。 targetSubjectClass.getSuperclass() 是获取该类型的 直接父类。
+        Class[] interfaces = targetSubjectClass.getInterfaces();
+
+        return (ITargetSubject) Proxy.newProxyInstance(classLoader, interfaces, this);
 
     }
 
