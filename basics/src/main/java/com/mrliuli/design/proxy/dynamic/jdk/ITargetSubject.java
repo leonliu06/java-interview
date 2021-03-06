@@ -9,4 +9,7 @@ public interface ITargetSubject {
 
     void request();
 
+    // 追加一个方法
+    void supplementaryMethod();
+
 }

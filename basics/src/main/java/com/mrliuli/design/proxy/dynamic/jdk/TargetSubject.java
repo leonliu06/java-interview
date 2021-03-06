@@ -12,4 +12,8 @@ public class TargetSubject implements ITargetSubject {
         System.out.println("执行目标对象的方法...");
     }
 
+    @Override
+    public void supplementaryMethod() {
+        System.out.println("后来追加的一个方法");
+    }
 }

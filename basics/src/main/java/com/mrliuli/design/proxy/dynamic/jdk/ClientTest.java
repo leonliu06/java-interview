@@ -13,10 +13,13 @@ public class ClientTest {
         ITargetSubject target = new TargetSubject();
 
         JDKDynamicProxy jdkDynamicProxy = new JDKDynamicProxy(target);
-        
+
         ITargetSubject proxy = jdkDynamicProxy.createDynamicProxyInstance();
 
         proxy.request();
+
+        proxy.supplementaryMethod();
+
 
     }
 
