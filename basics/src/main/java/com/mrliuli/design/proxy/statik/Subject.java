@@ -9,4 +9,6 @@ public interface Subject {
 
     void request();
 
+    void anotherRequest();
+
 }

@@ -24,6 +24,13 @@ public class StaticProxy implements Subject {
 
     }
 
+    @Override
+    public void anotherRequest() {
+        preRequest();
+        realSubject.anotherRequest();
+        postRequest();
+    }
+
     private void preRequest() {
         System.out.println("执行真实主题之前的预处理...");
     }

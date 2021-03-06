@@ -12,4 +12,10 @@ public class RealSubject implements Subject {
         System.out.println("执行真实主题方法...");
     }
 
+    @Override
+    public void anotherRequest() {
+
+        System.out.println("执行真实主题的另一个方法...");
+
+    }
 }

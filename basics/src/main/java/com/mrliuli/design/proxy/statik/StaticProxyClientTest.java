@@ -14,6 +14,8 @@ public class StaticProxyClientTest {
 
         subject.request();
 
+        subject.anotherRequest();
+
     }
 
 }
