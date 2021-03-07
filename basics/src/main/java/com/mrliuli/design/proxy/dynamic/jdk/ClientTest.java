@@ -16,6 +16,8 @@ public class ClientTest {
 
         ITargetSubject proxy = jdkDynamicProxy.createDynamicProxyInstance();
 
+        System.out.println(String.format("生成代理类：%s", proxy.getClass().getName()));
+
         proxy.request();
 
         proxy.supplementaryMethod();
