@@ -37,7 +37,7 @@ public class JDKDynamicProxy implements InvocationHandler {
         Class[] interfaces = targetSubjectClass.getInterfaces();
 
         /**
-         * 通过反射动态生成代理类 newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)
+         * 通过反射动态生成代理类 Proxy.newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)
          * 参数 loader 使用目标类的类加载器来生成代理
          * 参数 interfaces 目标类实现的所有接口，所有 java 动态代理只能代理 实现了接口的目标类的方法。 代理类会代理目标类所有接口中的方法。
          * 参数 h 只有一个 invoke 方法，代理类方法的调用先发送到 h 中的 invoke 方法
