@@ -56,7 +56,7 @@
                     }
                 });
             }
-            // 通过类对象的构造函数来生成类的实例
+            // 通过类对象的构造函数来生成类的实例，InvocationHandler 类型的参数 h 构造函数传入代理类中
             return cons.newInstance(new Object[]{h});
         } catch (IllegalAccessException|InstantiationException e) {
             throw new InternalError(e.toString(), e);
