@@ -1,3 +1,4 @@
+## 1 前言
 &emsp;&emsp;JDK动态代理类是通过静态方法 `Proxy.newProxyInstance(ClassLoader loader, Class<?>[] interfaces, InvocationHandler h)` 基于java的反射原理动态生成的。
 方法的三个参数和返回值分别是：
 - 参数 loader 使用目标类的类加载器来生成代理
@@ -10,7 +11,7 @@
 - 动态代理类也是实现了相同的接口，所以代理类只能执行目标类中接口包含的方法
 - 代理类的类型是 `com.sun.proxy.$Proxy0` 
 
-## 1 `Proxy.newProxyInstance`源码分析
+## 2 `Proxy.newProxyInstance`源码分析
 ```
     public static Object newProxyInstance(ClassLoader loader,
                                           Class<?>[] interfaces,
@@ -71,13 +72,13 @@
         }
     }
 ```
-## 1.1 `getProxyClass0(loader, intfs)`源码分析
+## 2.1 `getProxyClass0(loader, intfs)`源码分析
 ```
     /**
      * Generate a proxy class.  Must call the checkProxyAccess method
      * to perform permission checks before calling this.
      */
-     // 生成代理类
+     // 生成代理类的类型对象
     private static Class<?> getProxyClass0(ClassLoader loader,
                                            Class<?>... interfaces) {
         if (interfaces.length > 65535) {
@@ -88,7 +89,7 @@
         // the given interfaces exists, this will simply return the cached copy;
         // otherwise, it will create the proxy class via the ProxyClassFactory
         // 如果代理类的缓存变量 proxyClassCache 里有 interfaces 的代理类，则直接返回
-        // 否则通过
+        // 否则通过 ProxyClassFactory 来生成
         return proxyClassCache.get(loader, interfaces);
     }
 ```
