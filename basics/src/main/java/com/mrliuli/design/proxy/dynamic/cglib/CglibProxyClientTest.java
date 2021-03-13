@@ -28,15 +28,7 @@ public class CglibProxyClientTest {
         // InvocationHandler: 增加方法，添加额外的功能
         // MethodInterceptor: 与 InvocationHandler 功能类似，但是控制的权限更多
         // InvocationHandler 有些方法调用会引起无限循环，一般使用 MethodHandler
-        enhancer.setCallback(new MethodInterceptor() {
-            @Override
-            public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-                System.out.println("before...");
-                Object object = proxy.invokeSuper(obj, args);
-                System.out.println("after...");
-                return object;
-            }
-        });
+        enhancer.setCallback(new TargetProxyMethodInterceptor());
 
         // 生成代理类
         Object object = enhancer.create();
