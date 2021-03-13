@@ -22,7 +22,12 @@ public class CglibProxyClientTest {
 
         // 继承目标类
         enhancer.setSuperclass(target.getClass());
-        // 设置回调
+        // 也可以使用接口
+//        enhancer.setInterfaces(Target.class.getInterfaces());
+        // 设置回调，这里可以设置很多回调类型，有FixedValue,InvocationHandler,MethodInterceptor等
+        // InvocationHandler: 增加方法，添加额外的功能
+        // MethodInterceptor: 与 InvocationHandler 功能类似，但是控制的权限更多
+        // InvocationHandler 有些方法调用会引起无限循环，一般使用 MethodHandler
         enhancer.setCallback(new MethodInterceptor() {
             @Override
             public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
