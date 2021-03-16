@@ -1,2 +1,4 @@
 rootProject.name = 'java-interview'
 include("basics", "mbp")
+include 'jvm'
+
