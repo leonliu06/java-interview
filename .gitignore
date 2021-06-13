@@ -4,3 +4,4 @@ out/*
 basics/out/*
 build/*
 **/build/*
+*.class
